@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeAdjuster</title>
+    <link rel="stylesheet" href="../css/formatting.css">
+</head>
+<body>
+    <h1>ResumeAdjuster</h1>
+    <p>Put in your past job experiences and get a personalized adjustment plan.</p>
+    <label for="uploadChoice">How would you like to input your past job experiences?</label>
+    <select name="uploadChoice" id="uploadChoice">
+        <option value="select">Select an option from below</option>
+        <option value="file">File Upload</option>
+        <option value="text">Enter Through Text</option>
+    </select>
+    <div id = "past-job-experience-div">
+        <form id =submit>
+            <input type="file" id="myFile" name="filename">
+            <input type="submit" >
+        </form>
+    </div>
+    <div id = "parsed-job-experience-text">
+        <p>Here is your parsed job experience:</p>
+    </div>
+    <div id = "job-description-text">
+        <p>Submit the job description of the role that you are applying for:</p>
+        <textarea id="job-description-input" placeholder="Enter your past job description" name = "job-description-input"></textarea><br>
+        <input type="submit" value="Submit">
+    </div>
+    <button id = "submit-button">Generate Experience</button>
+    <div id = "generated-experience-text">
+        <p>Here is your generated experience:</p>
+    </div>
+    <script src="../scripts/scripts.js"></script>
+
+    
+</body>
+</html>
