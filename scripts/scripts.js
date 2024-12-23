@@ -1,10 +1,26 @@
+const  PdfReader = require("pdfreader").PdfReader;
+
+
 const uploadChoice = document.getElementById("uploadChoice");
 const pastJobExperienceDiv = document.getElementById("past-job-experience-div");
 const formSubmit = document.getElementById("submit")
 
+
+window.addEventListener('pageshow', function(event) {
+    // Reset the select element to default option
+    if (uploadChoice) {
+        uploadChoice.value = "select";
+    }
+    
+    // Clear the div content
+    if (pastJobExperienceDiv) {
+        pastJobExperienceDiv.innerHTML = "";
+    }
+});
+
+
 uploadChoice.addEventListener("change", function() {
     // changing of upload choice to file insert
-
     if (uploadChoice.value == "file") {
         pastJobExperienceDiv.innerHTML = "";
         
@@ -40,9 +56,11 @@ uploadChoice.addEventListener("change", function() {
                 alert("Please select a file before submitting");
                 return;
             }
+
+            const file =fileInput.files[0]
             
             // If all checks pass, proceed with redirect
-            window.location.href = "../html/parsedText.html";
+            // window.location.href = "../html/jobPosting.html";
         });
         
         // Add completed form to the div
@@ -74,36 +92,32 @@ uploadChoice.addEventListener("change", function() {
         form.appendChild(textarea);
         form.appendChild(lineBreak);
         form.appendChild(submitButton);
-        form.addEventListener("submit",redirectPage)
-        
-        pastJobExperienceDiv.appendChild(form);
+        // Move FormData creation and logging to the submit event
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            console.log("Text Content:", formData.get("jobExperienceText"));
+            localStorage.setItem('parsedInfo', formData.get("jobExperienceText"));
+            
+            // Redirect after logging the data
+            window.location.href = "../html/jobPosting.html";
+    });
+    
+    pastJobExperienceDiv.appendChild(form);
+    }else {
+        pastJobExperienceDiv.innerHTML = "";
     }
 });
 
-formSubmit.addEventListener("submit", function(e) {
+
+function redirectPage(e,form){
     e.preventDefault();
+    const formData = new FormData(form);
+    console.log("Form Data:", formData);
+    console.log("Text Content:", formData.get("jobExperienceText"));
     
-    const fileInput = document.getElementById("myFile");
-    
-    // Restrict to PDF files in file picker
-    fileInput.accept = ".pdf"
-    
-    // Check if a file was selected
-    if (!fileInput.files.length) {
-        alert("Please select a pdf file before submitting");
-        return;
-    }
-    
-    // If we have a PDF file, proceed with redirect
-    window.location.href = "../html/parsedText.html";
-});
+    // Redirect after logging the data
+    window.location.href = "../html/jobPosting.html";
+    };
 
-
-
-function redirectPage(e){
-    e.preventDefault();
-    console.log("hello")
-    window.location.href = "../html/parsedText.html";
-    
-}
-
+const parsedInfo = localStorage.getItem("parsedInfo")
