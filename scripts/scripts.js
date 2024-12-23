@@ -19,6 +19,9 @@ uploadChoice.addEventListener("change", function() {
         fileInput.type = "file"
         fileInput.id = "myFile"
         fileInput.name = "filename"
+
+        // Restrict to PDF files in file picker
+        fileInput.accept = ".pdf"
         
         // Set submit button type
         submitInput.type = "submit"
@@ -27,7 +30,20 @@ uploadChoice.addEventListener("change", function() {
         // Add input elements to form
         form.appendChild(fileInput)
         form.appendChild(submitInput)
-        form.addEventListener("submit",redirectPage)
+        
+        // Add submit event listener with file checks
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Check if a file was selected
+            if (!fileInput.files.length) {
+                alert("Please select a file before submitting");
+                return;
+            }
+            
+            // If all checks pass, proceed with redirect
+            window.location.href = "../html/parsedText.html";
+        });
         
         // Add completed form to the div
         pastJobExperienceDiv.appendChild(form)
@@ -68,7 +84,9 @@ formSubmit.addEventListener("submit", function(e) {
     e.preventDefault();
     
     const fileInput = document.getElementById("myFile");
-    console.log(fileInput.files);
+    
+    // Restrict to PDF files in file picker
+    fileInput.accept = ".pdf"
     
     // Check if a file was selected
     if (!fileInput.files.length) {
@@ -76,16 +94,7 @@ formSubmit.addEventListener("submit", function(e) {
         return;
     }
     
-    const file = fileInput.files[0];
-    
-    // Check if file is PDF
-    if (file.type !== 'application/pdf') {
-        alert("Please select a PDF file only");
-        return;
-    }
-    
     // If we have a PDF file, proceed with redirect
-    console.log("File selected:", file.name);
     window.location.href = "../html/parsedText.html";
 });
 
