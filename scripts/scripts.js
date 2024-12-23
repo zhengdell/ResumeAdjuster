@@ -1,5 +1,4 @@
-const  PdfReader = require("pdfreader").PdfReader;
-
+// Import PDF.js if you're using modules
 
 const uploadChoice = document.getElementById("uploadChoice");
 const pastJobExperienceDiv = document.getElementById("past-job-experience-div");
@@ -48,7 +47,7 @@ uploadChoice.addEventListener("change", function() {
         form.appendChild(submitInput)
         
         // Add submit event listener with file checks
-        form.addEventListener("submit", function(e) {
+        form.addEventListener("submit", async function(e) {
             e.preventDefault();
             
             // Check if a file was selected
@@ -58,14 +57,36 @@ uploadChoice.addEventListener("change", function() {
             }
 
             const file =fileInput.files[0]
-            
-            // If all checks pass, proceed with redirect
-            // window.location.href = "../html/jobPosting.html";
+
+            try {
+                // Read the PDF file
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // Load the PDF document
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                
+                // Extract text from all pages
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n';
+                }
+                
+                // Store the extracted text
+                localStorage.setItem('parsedInfo', fullText);
+                
+                // Redirect to the next page
+                window.location.href = "../html/jobPosting.html";
+                
+            } catch (error) {
+                console.error('Error reading PDF:', error);
+                alert('Error reading PDF file. Please try again.');
+            }
         });
-        
-        // Add completed form to the div
-        pastJobExperienceDiv.appendChild(form)
-        // changing of upload choice to text content submit
+    
+    pastJobExperienceDiv.appendChild(form);
     }else if (uploadChoice.value ==="text"){
         pastJobExperienceDiv.innerHTML = "";
         // Create new form element
@@ -104,7 +125,7 @@ uploadChoice.addEventListener("change", function() {
     });
     
     pastJobExperienceDiv.appendChild(form);
-    }else {
+}else {
         pastJobExperienceDiv.innerHTML = "";
     }
 });
